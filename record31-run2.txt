@@ -1,0 +1,112 @@
+PASS: practice output folder exists
+PASS: setup refuses an existing folder
+PASS: existing script unchanged
+
+### CMD: type C:\lesson31-demo\backup-note.bat
+@echo off
+echo %date% %time% backup ran >> out\log.txt
+### EXIT: 0
+
+### CMD: schtasks /create /tn "Lesson31Demo" /tr "C:\lesson31-demo\backup-note.bat" /sc daily /st 09:00
+SUCCESS: The scheduled task "Lesson31Demo" has successfully been created.
+### EXIT: 0
+PASS: no missed-run catch-up configured
+PASS: setup refuses an existing task
+
+### CMD: schtasks /run /tn "Lesson31Demo"
+SUCCESS: Attempted to run the scheduled task "Lesson31Demo".
+### EXIT: 0
+PASS: relative output path fails with result 1
+
+### CMD: schtasks /query /tn "Lesson31Demo" /v /fo list
+
+Folder: \
+HostName:                             runnervm0xl3a
+TaskName:                             \Lesson31Demo
+Next Run Time: (depends on when you run this)
+Status:                               Ready
+Logon Mode:                           Interactive only
+Last Run Time: (depends on when you run this)
+Last Result:                          1
+Author:                               runnervm0xl3a\runneradmin
+Task To Run:                          C:\lesson31-demo\backup-note.bat 
+Start In:                             N/A
+Comment:                              N/A
+Scheduled Task State:                 Enabled
+Idle Time:                            Disabled
+Power Management:                     Stop On Battery Mode, No Start On Batteries
+Run As User:                          runneradmin
+Delete Task If Not Rescheduled:       Disabled
+Stop Task If Runs X Hours and X Mins: 72:00:00
+Schedule:                             Scheduling data is not available in this format.
+Schedule Type:                        Daily 
+Start Time:                           9:00:00 AM
+Start Date: (depends on when you run this)
+End Date:                             N/A
+Days:                                 Every 1 day(s)
+Months:                               N/A
+Repeat: Every:                        Disabled
+Repeat: Until: Time:                  Disabled
+Repeat: Until: Duration:              Disabled
+Repeat: Stop If Still Running:        Disabled
+### EXIT: 0
+
+### CMD: type C:\lesson31-demo\out\log.txt
+The system cannot find the file specified.
+### EXIT: 1
+PASS: failed task left no expected log
+
+### CMD: type C:\lesson31-demo\backup-note.bat
+@echo off
+cd /d "%~dp0"
+echo %date% %time% backup ran >> out\log.txt
+### EXIT: 0
+
+### CMD: schtasks /run /tn "Lesson31Demo"
+SUCCESS: Attempted to run the scheduled task "Lesson31Demo".
+### EXIT: 0
+PASS: fixed script result 0
+
+### CMD: schtasks /query /tn "Lesson31Demo" /v /fo list
+
+Folder: \
+HostName:                             runnervm0xl3a
+TaskName:                             \Lesson31Demo
+Next Run Time: (depends on when you run this)
+Status:                               Ready
+Logon Mode:                           Interactive only
+Last Run Time: (depends on when you run this)
+Last Result:                          0
+Author:                               runnervm0xl3a\runneradmin
+Task To Run:                          C:\lesson31-demo\backup-note.bat 
+Start In:                             N/A
+Comment:                              N/A
+Scheduled Task State:                 Enabled
+Idle Time:                            Disabled
+Power Management:                     Stop On Battery Mode, No Start On Batteries
+Run As User:                          runneradmin
+Delete Task If Not Rescheduled:       Disabled
+Stop Task If Runs X Hours and X Mins: 72:00:00
+Schedule:                             Scheduling data is not available in this format.
+Schedule Type:                        Daily 
+Start Time:                           9:00:00 AM
+Start Date: (depends on when you run this)
+End Date:                             N/A
+Days:                                 Every 1 day(s)
+Months:                               N/A
+Repeat: Every:                        Disabled
+Repeat: Until: Time:                  Disabled
+Repeat: Until: Duration:              Disabled
+Repeat: Stop If Still Running:        Disabled
+### EXIT: 0
+PASS: fixed script wrote exactly one log line
+
+### CMD: type C:\lesson31-demo\out\log.txt
+Fri 10/16/2026 14:46:16.98 backup ran 
+### EXIT: 0
+
+### CMD: schtasks /delete /tn "Lesson31Demo" /f
+SUCCESS: The scheduled task "Lesson31Demo" was successfully deleted.
+### EXIT: 0
+PASS: practice task removed
+PASS: all critical release checks passed
