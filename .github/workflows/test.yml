@@ -1,0 +1,13 @@
+name: test
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Verify task collision refusal, failure, fix and cleanup
+        shell: pwsh
+        run: ./verify31.ps1
